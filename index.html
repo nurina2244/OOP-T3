@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Topic 3</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #e0e0e0; padding: 20px; display: flex; justify-content: center; }
+    .quiz-container { width: 100%; max-width: 650px; background: #1e1e1e; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+    .progress-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-weight: bold; }
+    .badge { padding: 6px 12px; border-radius: 20px; font-size: 14px; }
+    .badge-correct { background-color: #2e7d32; color: white; }
+    .badge-wrong { background-color: #c62828; color: white; }
+    .question { font-size: 18px; margin-bottom: 20px; font-weight: 600; line-height: 1.4; }
+    .option { background: #2c2c2c; padding: 14px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; border: 1px solid #3d3d3d; }
+    .option:hover { background: #3a3a3a; }
+    .option.correct { background: #1b5e20 !important; border-color: #4caf50; color: white; }
+    .option.wrong { background: #b71c1c !important; border-color: #f44336; color: white; }
+    .nav-btns { display: flex; justify-content: space-between; margin-top: 20px; }
+    button { background: #1a73e8; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    button:disabled { background: #424242; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h2><center>Topic 3</center></h2>
+    <div class="progress-bar">
+        <span id="question-count">Question 1 of 50</span>
+        <span id="score-keeper" class="badge">Score: 0</span>
+    </div>
+    <div id="feedback-badge" style="margin-bottom: 15px;"></div>
+    <div class="question" id="question-text">Loading question...</div>
+    <div id="options-container"></div>
+    <div class="nav-btns">
+        <button id="prev-btn" onclick="prevQuestion()" disabled>Previous</button>
+        <button id="next-btn" onclick="nextQuestion()" disabled>Next</button>
+    </div>
+</div>
+
+<script>
+  const questions = [
+    // --- TOPIC 3.1: CONTROL FLOW (Selection & Iteration) ---
+    {
+      question: "Which of the following is a single selection statement in Java?",
+      options: ["switch statement", "single if statement", "for loop", "while loop"],
+      answer: 1
+    },
+    {
+      question: "What is the output of the following code snippet? \nint number = 10;\nif (number > 0) {\n  System.out.println(\"Positive\");\n}",
+      options: ["Positive", "No output", "Error", "Negative"],
+      answer: 0
+    },
+    {
+      question: "Which statement is used to execute a block of code when a condition is true, and another block if it is false?",
+      options: ["if-only", "if...else statement", "switch-case", "do-while"],
+      answer: 1
+    },
+    {
+      question: "What is a nested if statement?",
+      options: ["An if statement inside another loop", "An if statement written within the body of another if statement", "A switch statement inside an if statement", "An array of if statements"],
+      answer: 1
+    },
+    {
+      question: "Which statement is best used for multi-way branching based on an integral or char expression?",
+      options: ["if-else-if", "nested if", "switch statement", "do-while loop"],
+      answer: 2
+    },
+    {
+      question: "What keyword is used to exit a switch case block and prevent fall-through?",
+      options: ["exit", "stop", "break", "return"],
+      answer: 2
+    },
+    {
+      question: "What is the purpose of the default label in a switch statement?",
+      options: ["It is mandatory for all switches", "Executed when none of the listed cases match", "It resets the switch variable", "It catches syntax errors"],
+      answer: 1
+    },
+    {
+      question: "What are the three core parts of an iteration statement (loop)?",
+      options: ["Input, Process, Output", "Initialization, Condition, Increment/Decrement", "Start, Stop, Jump", "Declare, Assign, Print"],
+      answer: 1
+    },
+    {
+      question: "When should you use a 'for loop' instead of a while loop?",
+      options: ["When the number of loops is known before execution", "When the loop must run infinitely", "When dealing with user inputs only", "When using ArrayLists"],
+      answer: 0
+    },
+    {
+      question: "How many times will a 'do-while' loop execute its code block at minimum, regardless of the condition?",
+      options: ["0 times", "1 time", "Infinite times", "Depends on initialization"],
+      answer: 1
+    },
+    {
+      question: "What is the primary difference between a 'while' loop and a 'do-while' loop?",
+      options: ["while checks condition after execution; do-while checks before", "do-while checks condition after execution; while checks before", "There is no difference", "do-while is only for arrays"],
+      answer: 1
+    },
+    {
+      question: "What will be the output of: \nint i = 0;\ndo {\n  System.out.print(i);\n  i++;\n} while (i < 2);",
+      options: ["012", "01", "12", "0"],
+      answer: 1
+    },
+    {
+      question: "In an if-else-if ladder, which block executes?",
+      options: ["All true blocks", "Only the last block", "The block associated with the first true condition", "None of them"],
+      answer: 2
+    },
+    {
+      question: "Which loop structure is ideal when the exact number of iterations is NOT known beforehand and depends on user interaction?",
+      options: ["for loop", "while loop", "switch statement", "single if"],
+      answer: 1
+    },
+    {
+      question: "What is the output of: \nint x = 5;\nif(x > 10) System.out.println(\"A\");\nelse System.out.println(\"B\");",
+      options: ["A", "B", "AB", "Error"],
+      answer: 1
+    },
+
+    // --- TOPIC 3.2: ARRAY MANIPULATION ---
+    {
+      question: "What is an Array in Java?",
+      options: ["A collection of variables of different types", "A collection of similar types of variables having a common name stored in consecutive memory locations", "A method to sort data", "An OOP class"],
+      answer: 1
+    },
+    {
+      question: "How are individual elements in an array accessed?",
+      options: ["Using memory addresses", "Using subscript/index numbers starting from 0", "Using variable names", "Using dot notation"],
+      answer: 1
+    },
+    {
+      question: "Which keyword is required when creating an array object in Java?",
+      options: ["create", "alloc", "new", "init"],
+      answer: 2
+    },
+    {
+      question: "What is the correct syntax to declare a one-dimensional integer array named 'ages'?",
+      options: ["int ages[];", "array int ages;", "ages int[];", "int[] ages = new int();"],
+      answer: 0
+    },
+    {
+      question: "Once an array is initialized in Java, can its size be changed?",
+      options: ["Yes, anytime", "No, the size is fixed", "Yes, using resize()", "Only for integer arrays"],
+      answer: 1
+    },
+    {
+      question: "What does the expression 'numbers[2]' represent in an array?",
+      options: ["The second element", "The third element", "The total size", "An error"],
+      answer: 1
+    },
+    {
+      question: "What is a multidimensional array?",
+      options: ["An array containing strings only", "A collection of one-dimensional arrays placed one below the other (rows and columns)", "An array with unlimited data types", "A dynamic list"],
+      answer: 1
+    },
+    {
+      question: "What is the correct syntax to declare a 2D integer array with 5 rows and 3 columns?",
+      options: ["int[][] marks = new int[5][3];", "int marks = new int(5,3);", "int[] marks = new int[5,3];", "matrix marks[5][3];"],
+      answer: 0
+    },
+    {
+      question: "When passing an array as an argument to a method, what is actually passed into the method?",
+      options: ["A complete copy of the array", "The memory address (reference) of the array", "The length of the array", "The first element only"],
+      answer: 1
+    },
+    {
+      question: "Can a method return an array reference back to the caller?",
+      options: ["No, methods cannot return arrays", "Yes, by specifying the array type as the return type", "Only via void methods", "Only using ArrayList"],
+      answer: 1
+    },
+    {
+      question: "What is the default index of the first element in a Java array?",
+      options: ["1", "-1", "0", "Depends on declaration"],
+      answer: 2
+    },
+    {
+      question: "Given int[] arr = {5, 6, 7, 8}; what is arr.length?",
+      options: ["3", "4", "5", "Error"],
+      answer: 1
+    },
+    {
+      question: "Which loop is most commonly used to iterate through all elements of a single-dimensional array?",
+      options: ["do-while loop", "switch statement", "for loop using array length", "if-else statement"],
+      answer: 2
+    },
+    {
+      question: "In a 2D array representation of student marks, what does marks[1][0] typically signify?",
+      options: ["Student 1, Subject 0", "Student 2, Subject 1 (Math mark)", "Student 0, Subject 1", "Total marks"],
+      answer: 1
+    },
+    {
+      question: "What happens if you try to access an array element with an index equal to its length (e.g., arr[length])?",
+      options: ["Returns null", "Returns 0", "Throws an ArrayIndexOutOfBoundsException", "Automatically resizes the array"],
+      answer: 2
+    },
+
+    // --- TOPIC 3.3: BASIC DATA STRUCTURES IN OOP CONTEXT ---
+    {
+      question: "What is Object-Oriented Design (OOD)?",
+      options: ["Planning software using flowcharts", "Planning a software system using objects, classes, and their relationships", "Designing website user interfaces", "Writing database queries"],
+      answer: 1
+    },
+    {
+      question: "What are the core principles of Object-Oriented Design (OOD)?",
+      options: ["Loop, Switch, Array, Method", "Encapsulation, Abstraction, Inheritance, Polymorphism", "Input, Process, Storage, Output", "Private, Public, Protected, Default"],
+      answer: 1
+    },
+    {
+      question: "What is the primary advantage of an ArrayList over a standard Java Array?",
+      options: ["ArrayList is faster", "ArrayList is fixed in size", "ArrayList allows flexibility by being able to both add and remove elements dynamically", "ArrayList only holds primitive data types"],
+      answer: 2
+    },
+    {
+      question: "Why must we use wrapper classes like 'Integer' instead of primitive types like 'int' when creating an ArrayList?",
+      options: ["Because ArrayLists can only store Objects, not primitive types", "Because 'int' is deprecated", "Because Integer uses less memory", "It is just a stylistic choice"],
+      answer: 0
+    },
+    {
+      question: "Which package must be imported to use ArrayList in Java?",
+      options: ["java.io.*", "java.util.ArrayList", "java.net.*", "java.oop.*"],
+      answer: 1
+    },
+    {
+      question: "Which method is used to add an element to an ArrayList?",
+      options: ["insert()", "append()", "add()", "push()"],
+      answer: 2
+    },
+    {
+      question: "Which method is used to retrieve an element from a specific index in an ArrayList?",
+      options: ["fetch()", "get()", "read()", "retrieve()"],
+      answer: 1
+    },
+    {
+      question: "Which method is used to modify an existing element in an ArrayList?",
+      options: ["update()", "change()", "set()", "modify()"],
+      answer: 2
+    },
+    {
+      question: "How do you remove all elements from an ArrayList at once?",
+      options: ["removeAll()", "delete()", "clear()", "reset()"],
+      answer: 2
+    },
+    {
+      question: "What does the Principle of Encapsulation involve?",
+      options: ["Hiding complexity and showing only essential features", "Bundling data and methods into a single unit (class) and restricting direct access", "Creating multiple copies of objects", "Inheriting properties from a parent class"],
+      answer: 1
+    },
+    {
+      question: "What is the goal of Abstraction in OOP?",
+      options: ["To protect data from direct modification", "To reduce complexity by hiding internal implementation details and exposing a simple interface", "To speed up code compilation", "To create fixed-size arrays"],
+      answer: 1
+    },
+    {
+      question: "In data structure context, how is encapsulation applied to an ArrayList within a class?",
+      options: ["Making the ArrayList private and providing public methods (like add/print) to interact with it safely", "Making the ArrayList public for everyone to modify", "Deleting the ArrayList after use", "Converting it to a primitive array"],
+      answer: 0
+    },
+    {
+      question: "What role do data structures play in Object-Oriented Design?",
+      options: ["They organize, store, and manage data efficiently within objects and classes", "They replace methods entirely", "They handle graphical user interfaces", "They handle network protocols"],
+      answer: 0
+    },
+    {
+      question: "Which data structure is best suited for representing hierarchical relationships like organizational charts?",
+      options: ["Array", "Tree", "ArrayList", "Single variable"],
+      answer: 1
+    },
+    {
+      question: "What happens if an external class tries to directly access a private ArrayList field inside an encapsulated class?",
+      options: ["It succeeds", "Compiler error occurs", "It returns null", "It creates a copy"],
+      answer: 1
+    },
+    {
+      question: "Which method is used to determine the number of elements currently stored in an ArrayList?",
+      options: ["length()", "count()", "size()", "capacity()"],
+      answer: 2
+    },
+    {
+      question: "What does the add(0, \"Cendol\") method do in an ArrayList?",
+      options: ["Replaces index 0 with Cendol", "Adds Cendol at the beginning (index 0) and shifts existing elements", "Throws an error if index 0 is full", "Deletes index 0"],
+      answer: 1
+    },
+    {
+      question: "Which of the following data structures offers quick lookups using keys?",
+      options: ["ArrayList", "HashMap", "Array", "Basic Loop"],
+      answer: 1
+    },
+    {
+      question: "In the context of abstraction with structured data, what does a user of a class care about most?",
+      options: ["The internal memory allocation algorithm", "The high-level interface/methods provided (e.g., how to call add()) rather than internal ArrayList workings", "The exact compiler version", "The private variable names"],
+      answer: 1
+    },
+    {
+      question: "Which exercise requirement accurately reflects ArrayList usage taught in Topic 3.3?",
+      options: ["Using fixed memory allocation with 'new int[3]'", "Creating an ArrayList, adding/modifying/removing elements, and printing the updated list", "Writing procedural C code", "Using pointers and memory addresses"],
+      answer: 1
+    }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+  let userAnswers = new Array(questions.length).fill(null);
+  let isAnswered = new Array(questions.length).fill(false);
+
+  const questionCountEl = document.getElementById("question-count");
+  const scoreKeeperEl = document.getElementById("score-keeper");
+  const questionTextEl = document.getElementById("question-text");
+  const optionsContainerEl = document.getElementById("options-container");
+  const prevBtn = document.getElementById("prev-btn");
+  const nextBtn = document.getElementById("next-btn");
+  const feedbackBadge = document.getElementById("feedback-badge");
+
+  function loadQuestion() {
+    const q = questions[currentQuestion];
+    questionCountEl.innerText = `Question ${currentQuestion + 1} of ${questions.length}`;
+    scoreKeeperEl.innerText = `Score: ${score}`;
+    questionTextEl.innerText = q.question;
+    optionsContainerEl.innerHTML = "";
+
+    feedbackBadge.innerHTML = "";
+
+    q.options.forEach((opt, index) => {
+      const optionDiv = document.createElement("div");
+      optionDiv.classList.add("option");
+      optionDiv.innerText = opt;
+
+      if (isAnswered[currentQuestion]) {
+        if (index === q.answer) {
+          optionDiv.classList.add("correct");
+        }
+        if (userAnswers[currentQuestion] === index && index !== q.answer) {
+          optionDiv.classList.add("wrong");
+        }
+      } else {
+        optionDiv.onclick = () => selectOption(index);
+      }
+
+      optionsContainerEl.appendChild(optionDiv);
+    });
+
+    prevBtn.disabled = currentQuestion === 0;
+    nextBtn.disabled = !isAnswered[currentQuestion];
+  }
+
+  function selectOption(selectedIndex) {
+    if (isAnswered[currentQuestion]) return;
+
+    isAnswered[currentQuestion] = true;
+    userAnswers[currentQuestion] = selectedIndex;
+
+    const q = questions[currentQuestion];
+    const options = optionsContainerEl.children;
+
+    if (selectedIndex === q.answer) {
+      score += 2; // 50 questions total, 100 marks max
+      options[selectedIndex].classList.add("correct");
+      feedbackBadge.innerHTML = `<span class="badge badge-correct">Correct!</span>`;
+    } else {
+      options[selectedIndex].classList.add("wrong");
+      options[q.answer].classList.add("correct");
+      feedbackBadge.innerHTML = `<span class="badge badge-wrong">Incorrect!</span>`;
+    }
+
+    scoreKeeperEl.innerText = `Score: ${score}`;
+    nextBtn.disabled = false;
+
+    for (let opt of options) {
+      opt.onclick = null;
+    }
+  }
+
+  function nextQuestion() {
+    if (currentQuestion < questions.length - 1) {
+      currentQuestion++;
+      loadQuestion();
+    } else {
+      showSummary();
+    }
+  }
+
+  function prevQuestion() {
+    if (currentQuestion > 0) {
+      currentQuestion--;
+      loadQuestion();
+    }
+  }
+
+  function showSummary() {
+    document.querySelector(".quiz-container").innerHTML = `
+      <h2><center>Quiz Completed! 🎉</center></h2>
+      <p style="text-align: center; font-size: 20px; margin: 20px 0;">Your Final Score: <b>${score} / 100</b></p>
+      <p style="text-align: center; color: #a0a0a0;">Thank you for testing your knowledge on Topic 3 (Control Structures, Arrays & Data Structures in OOP)!</p>
+      <div style="text-align: center; margin-top: 30px;">
+        <button onclick="location.reload()">Restart Quiz</button>
+      </div>
+    `;
+  }
+
+  loadQuestion();
+</script>
+
+</body>
+</html>
